@@ -45,12 +45,13 @@ class Client
 	 */
 	public function getAllChecks()
 	{
-		$client = new \Guzzle\Service\Client('https://api.pingdom.com/api/2.0');
-
-		/** @var $request \Guzzle\Http\Message\Request */
-		$request = $client->get('checks', array('App-Key' => $this->token));
-		$request->setAuth($this->username, $this->password);
-		$response = $request->send();
+		$client = new \GuzzleHttp\Client(['base_uri' => 'https://api.pingdom.com/api/2.0/']);
+		$response = $client->get('checks', [
+			'auth' => [$this->username, $this->password],
+			'headers' => [
+				'App-Key' => '$this->token'
+			]
+		]);
 		$response = json_decode($response->getBody(), true);
 
 		return $response['checks'];
@@ -63,12 +64,13 @@ class Client
 	 */
 	public function getProbes()
 	{
-		$client = new \Guzzle\Service\Client('https://api.pingdom.com/api/2.0');
-
-		/** @var $request \Guzzle\Http\Message\Request */
-		$request = $client->get('probes', array('App-Key' => $this->token));
-		$request->setAuth($this->username, $this->password);
-		$response = $request->send();
+		$client = new \GuzzleHttp\Client(['base_uri' => 'https://api.pingdom.com/api/2.0/']);
+		$response = $client->get('probes', [
+			'auth' => [$this->username, $this->password],
+			'headers' => [
+				'App-Key' => '$this->token'
+			]
+		]);
 		$response = json_decode($response->getBody(), true);
 		$probes   = array();
 
@@ -89,18 +91,20 @@ class Client
 	 */
 	public function getResults($checkId, $limit = 100, array $probes = null)
 	{
-		$client = new \Guzzle\Service\Client('https://api.pingdom.com/api/2.0');
+		$client = new \GuzzleHttp\Client(['base_uri' => 'https://api.pingdom.com/api/2.0/']);
 
-		/** @var $request \Guzzle\Http\Message\Request */
-		$request = $client->get('results/' . $checkId, array('App-Key' => $this->token));
-		$request->setAuth($this->username, $this->password);
-		$request->getQuery()->set('limit', $limit);
-
+		$query = ['limit' => $limit];
 		if (is_array($probes)) {
-			$request->getQuery()->set('probes', implode(',', $probes));
+			$query['probes'] = implode(',', $probes);
 		}
 
-		$response = $request->send();
+		$response = $client->get('results/' . $checkId, [
+			'query' => $query,
+			'auth' => [$this->username, $this->password],
+			'headers' => [
+				'App-Key' => '$this->token'
+			]
+		]);
 		$response = json_decode($response->getBody(), true);
 
 		return $response['results'];
@@ -115,17 +119,15 @@ class Client
 	 */
 	public function getPerformanceSummary($checkId, $resolution = 'hour')
 	{
-		$client = new \Guzzle\Service\Client('https://api.pingdom.com/api/2.0');
-
-		/** @var $request \Guzzle\Http\Message\Request */
-		$request = $client->get('summary.performance/' . $checkId, array('App-Key' => $this->token));
-		$request->setAuth($this->username, $this->password);
-		$request->getQuery()->set('resolution', $resolution);
-		$request->getQuery()->set('includeuptime', 'true');
-
-		$response = $request->send();
-		$response = json_decode($response->getBody(), true);
-
+		$client = new \GuzzleHttp\Client(['base_uri' => 'https://api.pingdom.com/api/2.0/']);
+		$query = ['resolution' => $resolution, 'includeuptime' => 'true'];
+		$response = $client->get('summary.performance/' . $checkId, [
+			'query' => $query,
+			'auth' => [$this->username, $this->password],
+			'headers' => [
+				'App-Key' => '$this->token'
+			]
+		]);
 		return $response['summary'][$resolution . 's'];
 	}
 
@@ -141,25 +143,15 @@ class Client
 	 * @return type
 	 */
 	public function addHTTPCheck($name, $host, $url, $sendtoemail, $sendtoiphone, $sendtoandroid, $contactids) {
-		$client = new \Guzzle\Service\Client('https://api.pingdom.com/api/2.0');
-
-		/** @var $request \Guzzle\Http\Message\Request */
-		$request = $client->post('checks', array('App-Key' => $this->token));
-		$request->setAuth($this->username, $this->password);
-
-		$query = $request->getQuery();
-
-		$query->set('name', $name);
-		$query->set('host', $host);
-		$query->set('type', 'http');
-		$query->set('url', $url);
-		$query->set('sendtoemail', $sendtoemail);
-		$query->set('sendtoiphone', $sendtoiphone);
-		$query->set('sendtoandroid', $sendtoandroid);
-		$query->set('contactids', implode(",", $contactids));
-		$query->set('use_legacy_notifications', 'true');
-
-		$response = $request->send();
+		$client = new \GuzzleHttp\Client(['base_uri' => 'https://api.pingdom.com/api/2.0/']);
+		$query = ['name' => $name, 'host' => $host,  'type' => 'http', 'url' => $url, 'sendtoemail' => $sendtoemail, 'sendtoiphone' => $sendtoiphone, 'sendtoandroid' => $sendtoandroid, 'contactids' =>implode(",", $contactids),'use_legacy_notifications' =>'true'];
+		$response = $client->post('checks', [
+			'query' => $query,
+			'auth' => [$this->username, $this->password],
+			'headers' => [
+				'App-Key' => '$this->token'
+			]
+		]);
 		$response = json_decode($response->getBody(), true);
 
 		return $response;
@@ -177,24 +169,15 @@ class Client
 	 * @return type
 	 */
 	public function updateHTTPCheck($checkId, $name, $host, $url, $sendtoemail, $sendtoiphone, $sendtoandroid, $contactids) {
-		$client = new \Guzzle\Service\Client('https://api.pingdom.com/api/2.0');
-
-		/** @var $request \Guzzle\Http\Message\Request */
-		$request = $client->put('checks/' . $checkId , array('App-Key' => $this->token));
-		$request->setAuth($this->username, $this->password);
-
-		$query = $request->getQuery();
-
-		$query->set('name', $name);
-		$query->set('host', $host);
-		$query->set('url', $url);
-		$query->set('sendtoemail', $sendtoemail);
-		$query->set('sendtoiphone', $sendtoiphone);
-		$query->set('sendtoandroid', $sendtoandroid);
-		$query->set('contactids', implode(",", $contactids));
-		$query->set('use_legacy_notifications', 'true');
-
-		$response = $request->send();
+		$client = new \GuzzleHttp\Client(['base_uri' => 'https://api.pingdom.com/api/2.0/']);
+		$query = ['name' => $name, 'host' => $host,  'type' => 'http', 'url' => $url, 'sendtoemail' => $sendtoemail, 'sendtoiphone' => $sendtoiphone, 'sendtoandroid' => $sendtoandroid, 'contactids' =>implode(",", $contactids),'use_legacy_notifications' =>'true'];
+		$response = $client->put('checks/' . $checkId, [
+			'query' => $query,
+			'auth' => [$this->username, $this->password],
+			'headers' => [
+				'App-Key' => '$this->token'
+			]
+		]);
 		$response = json_decode($response->getBody(), true);
 
 		return $response;
@@ -206,13 +189,13 @@ class Client
 	 * @return type
 	 */
 	public function removeCheck($checkId) {
-		$client = new \Guzzle\Service\Client('https://api.pingdom.com/api/2.0');
-
-		/** @var $request \Guzzle\Http\Message\Request */
-		$request = $client->delete('checks/' . $checkId, array('App-Key' => $this->token));
-		$request->setAuth($this->username, $this->password);
-
-		$response = $request->send();
+		$client = new \GuzzleHttp\Client(['base_uri' => 'https://api.pingdom.com/api/2.0/']);
+		$response = $client->delete('checks/' . $checkId, [
+			'auth' => [$this->username, $this->password],
+			'headers' => [
+				'App-Key' => '$this->token'
+			]
+		]);
 		$response = json_decode($response->getBody(), true);
 
 		return $response;
@@ -225,14 +208,7 @@ class Client
 	 */
 	public function getCheck($name)
 	{
-		$client = new \Guzzle\Service\Client('https://api.pingdom.com/api/2.0');
-
-		/** @var $request \Guzzle\Http\Message\Request */
-		$request = $client->get('checks', array('App-Key' => $this->token));
-		$request->setAuth($this->username, $this->password);
-		$response = $request->send();
-		$response = json_decode($response->getBody(), true);
-
+		$response = $this->getAllChecks();
 		foreach ($response['checks'] as $key => $value) {
             if($value['name'] == $name){
                 return $value['id'];
