@@ -196,7 +196,7 @@ class Client
     public function updateHTTPCheck($checkId, $name, $host, $url, $sendtoemail, $sendtoiphone, $sendtoandroid, $contactids)
     {
         $client = new \GuzzleHttp\Client(['base_uri' => 'https://api.pingdom.com/api/2.0/']);
-        $query = ['name' => $name, 'host' => $host, 'type' => 'http', 'url' => $url, 'sendtoemail' => $sendtoemail, 'sendtoiphone' => $sendtoiphone, 'sendtoandroid' => $sendtoandroid, 'contactids' => implode(",", $contactids), 'use_legacy_notifications' => 'true'];
+        $query = ['name' => $name, 'host' => $host, 'url' => $url, 'sendtoemail' => $sendtoemail, 'sendtoiphone' => $sendtoiphone, 'sendtoandroid' => $sendtoandroid, 'contactids' => implode(",", $contactids), 'use_legacy_notifications' => 'true'];
         try {
             $response = $client->put('https://api.pingdom.com/api/2.0/checks/' . $checkId, [
                 'query' => $query,
