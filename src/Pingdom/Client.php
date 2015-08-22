@@ -213,6 +213,7 @@ class Client
     public function getCheck($name)
     {
         $response = $this->getAllChecks();
+        var_dump($response);
         foreach ($response['checks'] as $key => $value) {
             if ($value['name'] == $name) {
                 return $value['id'];
