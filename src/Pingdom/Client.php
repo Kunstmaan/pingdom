@@ -49,7 +49,7 @@ class Client
         $response = $client->get('https://api.pingdom.com/api/2.0/checks', [
             'auth' => [$this->username, $this->password],
             'headers' => [
-                'App-Key' => '$this->token'
+                'App-Key' => $this->token
             ]
         ]);
         $response = json_decode($response->getBody(), true);
@@ -68,7 +68,7 @@ class Client
         $response = $client->get('https://api.pingdom.com/api/2.0/probes', [
             'auth' => [$this->username, $this->password],
             'headers' => [
-                'App-Key' => '$this->token'
+                'App-Key' => $this->token
             ]
         ]);
         $response = json_decode($response->getBody(), true);
@@ -102,7 +102,7 @@ class Client
             'query' => $query,
             'auth' => [$this->username, $this->password],
             'headers' => [
-                'App-Key' => '$this->token'
+                'App-Key' => $this->token
             ]
         ]);
         $response = json_decode($response->getBody(), true);
@@ -125,7 +125,7 @@ class Client
             'query' => $query,
             'auth' => [$this->username, $this->password],
             'headers' => [
-                'App-Key' => '$this->token'
+                'App-Key' => $this->token
             ]
         ]);
         return $response['summary'][$resolution . 's'];
@@ -150,7 +150,7 @@ class Client
             'query' => $query,
             'auth' => [$this->username, $this->password],
             'headers' => [
-                'App-Key' => '$this->token'
+                'App-Key' => $this->token
             ]
         ]);
         $response = json_decode($response->getBody(), true);
@@ -178,7 +178,7 @@ class Client
             'query' => $query,
             'auth' => [$this->username, $this->password],
             'headers' => [
-                'App-Key' => '$this->token'
+                'App-Key' => $this->token
             ]
         ]);
         $response = json_decode($response->getBody(), true);
@@ -197,7 +197,7 @@ class Client
         $response = $client->delete('https://api.pingdom.com/api/2.0/checks/' . $checkId, [
             'auth' => [$this->username, $this->password],
             'headers' => [
-                'App-Key' => '$this->token'
+                'App-Key' => $this->token
             ]
         ]);
         $response = json_decode($response->getBody(), true);
